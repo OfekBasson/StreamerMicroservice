@@ -3,54 +3,67 @@ namespace Streamer
     class DataStreamer
     {
         private int nextImageIndex;
-        public int NextImageIndex
-        {
-            get { return nextImageIndex; }
-            set { nextImageIndex = value; }
-        }
+        private string destinationDir;
 
         public DataStreamer()
         {
-            this.NextImageIndex = 0;
-            this.DestinationDir = "/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/data_destination";
+            nextImageIndex = 0;
+            destinationDir = "/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/data_destination";
         }
 
-        private string destinationDir;
-        public string DestinationDir
+        public string StreamDataAndReturnImageId()
         {
-            get { return destinationDir; }
-            set { destinationDir = value; }
+            string sourceDir = $"/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/data_origin/{nextImageIndex}";
+            FileInfo[] filesInsideDir = GetFilesFromDir(sourceDir);
+            string tragetDirPath = GetDestinationDirectoryPath();
+            CopyFilesToDestinationDir(filesInsideDir, tragetDirPath);
+            string imageID = nextImageIndex.ToString();
+            nextImageIndex += 1;
+            return imageID;
         }
 
-        public void StreamData()
+        private void CopyFilesToDestinationDir(FileInfo[] files, string tragetDirPath)
         {
-            Console.WriteLine($"this.NextImageIndex is: {this.NextImageIndex}");
-            string sourceDir = $"/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/data_origin/{this.NextImageIndex}";
+            foreach (FileInfo file in files)
+            {
+                string targetFilePath = Path.Combine(tragetDirPath, file.Name);
+                file.CopyTo(targetFilePath);
+            }
+        }
 
+        private string GetDestinationDirectoryPath()
+        {
+            string tragetDirPath = Path.Combine(destinationDir, nextImageIndex.ToString());
+            if (IsDirectoryAlreadyCopiedToDestination(tragetDirPath))
+                throw new Exception($"Directory already exists in the 'data_destination' folder");
+            else
+            {
+                Directory.CreateDirectory(tragetDirPath);
+            }
+            return tragetDirPath;
+        }
+
+        private FileInfo[] GetFilesFromDir(string sourceDir)
+        {
             DirectoryInfo dir = new DirectoryInfo(sourceDir);
             if (!dir.Exists)
                 throw new DirectoryNotFoundException($"Source directory not found: {dir.FullName}");
 
             FileInfo[] filesInsideDir = dir.GetFiles();
-            if (!this.DoesDirectoryContainRightFiles(filesInsideDir))
-            {
+            if (!DoesDirectoryContainRightFiles(filesInsideDir))
                 throw new Exception($"Directory contains wrong files/partial files/unnecessary files.");
-            }
 
-            string tragetDirPath = Path.Combine(this.DestinationDir, this.NextImageIndex.ToString());
-            Directory.CreateDirectory(tragetDirPath);
+            return filesInsideDir;
+        }
 
-            foreach (FileInfo file in filesInsideDir)
-            {
-                string targetFilePath = Path.Combine(tragetDirPath, file.Name);
-                file.CopyTo(targetFilePath);
-            }
-            this.NextImageIndex += 1;
+        private bool IsDirectoryAlreadyCopiedToDestination(string dirPath)
+        {
+            DirectoryInfo dir = new DirectoryInfo(dirPath);
+            return dir.Exists;
         }
 
         private bool DoesDirectoryContainRightFiles(FileInfo[] files)
         {
-            Console.WriteLine("Entered the 'DoesDirectoryContainRightFiles' method");
             bool doesDirectoryContainImage = false;
             bool doesDirectoryContainJson = false;
             bool doesDirectoryContainUnnecessaryFiles = false;

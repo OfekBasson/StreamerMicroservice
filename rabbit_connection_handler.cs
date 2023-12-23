@@ -1,42 +1,60 @@
 using System.Text;
 using RabbitMQ.Client;
 
-
 namespace Streamer
 {
-    class RabbitConnectionHandler
+    class RabbitConnectionHandler : IDisposable
     {
         private ConnectionFactory factory;
-        public ConnectionFactory Factory
-        {
-            get { return factory; }
-            set { factory = value; }
-        }
         private IConnection connection;
-        public IConnection Connection
-        {
-            get { return connection; }
-            set { connection = value; }
-        }
-
         private IModel channel;
-        public IModel Channel
-        {
-            get { return channel; }
-            set { channel = value; }
-        }
-
+        private bool disposed = false;
 
         public RabbitConnectionHandler()
         {
-            this.Factory = new ConnectionFactory { HostName = "localhost" };
-            this.Connection = factory.CreateConnection();
-            this.Channel = connection.CreateModel();
+            factory = new ConnectionFactory { HostName = "localhost" };
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
+            channel.QueueDeclare(queue: "hello",
+                     durable: false,
+                     exclusive: false,
+                     autoDelete: false,
+                     arguments: null);
+        }
+
+        public void PublishID(string id)
+        {
+            byte[] body = Encoding.UTF8.GetBytes(id);
+            channel.BasicPublish(exchange: string.Empty,
+                     routingKey: "hello",
+                     basicProperties: null,
+                     body: body);
+            Console.WriteLine($" [x] Sent {id}");
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    channel?.Dispose();
+                    connection?.Dispose();
+                }
+
+                disposed = true;
+            }
         }
 
         ~RabbitConnectionHandler()
         {
-            //Need to add a method fore disposing the connection
+            Dispose(disposing: false);
         }
     }
 }
