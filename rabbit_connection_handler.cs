@@ -29,7 +29,7 @@ namespace Streamer
                      routingKey: "hello",
                      basicProperties: null,
                      body: body);
-            Console.WriteLine($" [x] Sent {id}");
+            Console.WriteLine($"Sent {id} to rabbit queue");
         }
 
         public void Dispose()

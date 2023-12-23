@@ -27,3 +27,9 @@
 /Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/bin/Debug/net8.0/RabbitMQ.Client.dll
 /Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/obj/Debug/net8.0/Streamer.csproj.AssemblyReference.cache
 /Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/obj/Debug/net8.0/Streamer.csproj.CopyComplete
+/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/bin/Debug/net8.0/Microsoft.AspNetCore.OpenApi.dll
+/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/bin/Debug/net8.0/Microsoft.OpenApi.dll
+/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/bin/Debug/net8.0/Swashbuckle.AspNetCore.Swagger.dll
+/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/bin/Debug/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+/Users/wpqbswn/Desktop/Ofek/8200-learning/final_project/Streamer/obj/Debug/net8.0/Streamer.MvcApplicationPartsAssemblyInfo.cs
